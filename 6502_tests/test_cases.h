@@ -106,7 +106,7 @@ void test_plp_imp(void);
 	{"tya_imp", test_tya_imp}
 
 #define test_stack_operations \
-	{"txs_imp", test_txs_imp},		\
+	{"tsx_imp", test_tsx_imp},		\
 	{"txs_imp", test_txs_imp},		\
 	{"pha_imp", test_pha_imp},		\
 	{"php_imp", test_php_imp},		\

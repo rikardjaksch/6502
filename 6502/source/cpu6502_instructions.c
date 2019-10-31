@@ -369,6 +369,8 @@ uint8_t ora(cpu6502_t* cpu)
 
 uint8_t pha(cpu6502_t* cpu)
 {
+	cpu6502_write_data(cpu, 0x1000 + cpu->stack_pointer, cpu->accumulator);
+	cpu->stack_pointer--;
 	return 0;
 }
 
@@ -445,6 +447,7 @@ uint8_t sty(cpu6502_t* cpu)
 
 uint8_t tax(cpu6502_t* cpu)
 {
+	// X,Z,N = A
 	cpu->x_register = cpu->accumulator;
 	cpu_set_flag(cpu, CPU_STATUS_ZERO, cpu->x_register == 0x00);
 	cpu_set_flag(cpu, CPU_STATUS_NEGATIVE, cpu->x_register & 0x80);
@@ -453,6 +456,7 @@ uint8_t tax(cpu6502_t* cpu)
 
 uint8_t tay(cpu6502_t* cpu)
 {
+	// Y,Z,N = A
 	cpu->y_register = cpu->accumulator;
 	cpu_set_flag(cpu, CPU_STATUS_ZERO, cpu->y_register == 0x00);
 	cpu_set_flag(cpu, CPU_STATUS_NEGATIVE, cpu->y_register & 0x80);
@@ -461,11 +465,16 @@ uint8_t tay(cpu6502_t* cpu)
 
 uint8_t tsx(cpu6502_t* cpu)
 {
+	// X,Z,N = S
+	cpu->x_register = cpu->stack_pointer;
+	cpu_set_flag(cpu, CPU_STATUS_ZERO, cpu->x_register == 0x00);
+	cpu_set_flag(cpu, CPU_STATUS_NEGATIVE, cpu->x_register & 0x80);
 	return 0;
 }
 
 uint8_t txa(cpu6502_t* cpu)
 {
+	// A,Z,N = X
 	cpu->accumulator = cpu->x_register;
 	cpu_set_flag(cpu, CPU_STATUS_ZERO, cpu->accumulator == 0x00);
 	cpu_set_flag(cpu, CPU_STATUS_NEGATIVE, cpu->accumulator & 0x80);
@@ -474,11 +483,14 @@ uint8_t txa(cpu6502_t* cpu)
 
 uint8_t txs(cpu6502_t* cpu)
 {
+	// S = X
+	cpu->stack_pointer = cpu->x_register;
 	return 0;
 }
 
 uint8_t tya(cpu6502_t* cpu)
 {
+	// A,Z,N = Y
 	cpu->accumulator = cpu->y_register;
 	cpu_set_flag(cpu, CPU_STATUS_ZERO, cpu->accumulator == 0x00);
 	cpu_set_flag(cpu, CPU_STATUS_NEGATIVE, cpu->accumulator & 0x80);
