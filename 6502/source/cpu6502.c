@@ -1,29 +1,17 @@
 #include "cpu6502.h"
 #include "cpu6502_io.h"
-#include "cpu6502_macros.h"
 #include "cpu6502_instructions.h"
 #include <stdlib.h>
 #include <assert.h>
 
+// Internal cpu implementation data that we want to hide from
+// the public API.
 typedef struct cpu6502_internal
 {
 	cpu6502_io_t* io_interface;
-
 	uint8_t current_cycles;
 	uint32_t total_cycles;
 } cpu6502_internal_t;
-
-void cpu6502_write_data(cpu6502_t* cpu, uint16_t address, uint8_t data)
-{
-	assert(cpu && cpu->internal);
-	cpu6502_io_write(cpu->internal->io_interface, address, data);
-}
-
-uint8_t cpu6502_read_data(cpu6502_t* cpu, uint16_t address)
-{
-	assert(cpu && cpu->internal);
-	return cpu6502_io_read(cpu->internal->io_interface, address);
-}
 
 cpu6502_t* cpu6502_create(cpu6502_io_t* io_interface)
 {
@@ -32,12 +20,12 @@ cpu6502_t* cpu6502_create(cpu6502_io_t* io_interface)
 		return cpu;
 
 	cpu->internal = (cpu6502_internal_t*)malloc(sizeof(cpu6502_internal_t));
-	if (cpu->internal == NULL) 
+	if (cpu->internal == NULL)
 	{
 		free(cpu);
 		return NULL;
 	}
-		
+
 	cpu->internal->io_interface = io_interface;
 	cpu->internal->current_cycles = 0;
 	cpu->internal->total_cycles = 0;
@@ -48,6 +36,41 @@ cpu6502_t* cpu6502_create(cpu6502_io_t* io_interface)
 void cpu6502_destroy(cpu6502_t* cpu)
 {
 	free(cpu);
+}
+
+void cpu6502_write_data(cpu6502_t* cpu, uint16_t address, uint8_t data)
+{
+	assert(cpu && cpu->internal);
+	cpu6502_io_write(cpu->internal->io_interface, address, data);
+}
+
+void cpu6502_push_stack(cpu6502_t* cpu, uint8_t data)
+{
+	assert(cpu);
+	cpu6502_write_data(cpu, CPU_6502_STACK_BASE + cpu->stack_pointer, data);
+	cpu->stack_pointer--;
+}
+
+uint8_t cpu6502_read_data(cpu6502_t* cpu, uint16_t address)
+{
+	assert(cpu && cpu->internal);
+	return cpu6502_io_read(cpu->internal->io_interface, address);
+}
+
+uint8_t cpu6502_pop_stack(cpu6502_t* cpu)
+{
+	assert(cpu);
+	cpu->stack_pointer++;
+	return cpu6502_read_data(cpu, CPU_6502_STACK_BASE + cpu->stack_pointer);
+}
+
+void cpu6502_set_status_bit(cpu6502_t* cpu, enum cpu6502_status_bit bit, bool toogle)
+{
+	assert(cpu);
+	if (toogle)
+		cpu->status_register |= bit;
+	else
+		cpu->status_register &= ~bit;
 }
 
 void cpu6502_clock(cpu6502_t* cpu)
@@ -106,9 +129,9 @@ void cpu6502_reset_interrupt(cpu6502_t* cpu)
 
 	// Read high and low bytes for the start address from the reset vector
 	// and load it in to the program counter.
-	uint8_t lo = cpu6502_read_data(cpu, 0xFFFC);
-	uint8_t hi = cpu6502_read_data(cpu, 0xFFFD);
-	cpu->program_counter = (uint16_t)(hi << 8) | lo;
+	uint8_t lo = cpu6502_read_data(cpu, CPU_6502_RESET_VECTOR_LOW);
+	uint8_t hi = cpu6502_read_data(cpu, CPU_6502_RESET_VECTOR_HIGH);
+	cpu->program_counter = bytes_to_word(hi, lo);
 
 	// Setup the status register
 	cpu->status_register = CPU_STATUS_UNUSED;

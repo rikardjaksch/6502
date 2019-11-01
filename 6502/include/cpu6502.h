@@ -1,8 +1,24 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
+
+// Utility macro to combine high and low byte to a single word.
+#define bytes_to_word(h, l) ((uint16_t)((h) << 8 ) | (l))
 
 typedef struct cpu6502_io cpu6502_io_t;
+
+enum
+{
+	// The stack resides between 0x1000 and 0x1FF
+	// (stack pointer is an offset from the base).
+	CPU_6502_STACK_BASE = 0x1000,
+
+	// High and low part of the address that the reset interrupt
+	// will use to feed the program counter.
+	CPU_6502_RESET_VECTOR_LOW = 0xFFFC,
+	CPU_6502_RESET_VECTOR_HIGH = 0xFFFD,
+};
 
 // State object representing the 6502 micro processor.
 typedef struct cpu6502
@@ -45,9 +61,21 @@ void cpu6502_destroy(cpu6502_t* cpu);
 // IO interface.
 void cpu6502_write_data(cpu6502_t* cpu, uint16_t address, uint8_t data);
 
+// Similar to cpu6502_write_data but uses a pre-defined address.
+// Will also update the stack pointer to a correct value.
+void cpu6502_push_stack(cpu6502_t* cpu, uint8_t data);
+
 // Instructs the cpu to read data from 'address' over the internal
 // IO interface.
 uint8_t cpu6502_read_data(cpu6502_t* cpu, uint16_t address);
+
+// Similar to cpu6502_read_data but uses a pre-defined address.
+// Will also update the stack pointer to a correct value.
+uint8_t cpu6502_pop_stack(cpu6502_t* cpu);
+
+// Sets the specífied status bit in the status register of the specified cpu
+// to either '1' or '0' based on if 'toogle' is true or false.
+void cpu6502_set_status_bit(cpu6502_t* cpu, enum cpu6502_status_bit bit, bool toogle);
 
 // Sends a single clock pulse to the cpu.
 // Majority of instructions do require several clock
