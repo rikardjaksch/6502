@@ -7,5 +7,6 @@ TEST_LIST = {
 	test_load_store_operations,
 	test_register_transfer_operations,
 	test_stack_operations,
+	test_jump_and_call_operations,
 	{0}
 };

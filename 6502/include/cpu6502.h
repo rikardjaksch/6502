@@ -4,6 +4,8 @@
 #include <stdbool.h>
 
 // Utility macro to combine high and low byte to a single word.
+#define high_byte(word) (uint8_t)(word >> 8)
+#define low_byte(word) (uint8_t)(word & 0x00FF)
 #define bytes_to_word(h, l) ((uint16_t)((h) << 8 ) | (l))
 
 typedef struct cpu6502_io cpu6502_io_t;

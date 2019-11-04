@@ -60,6 +60,11 @@ void test_plp_imp(void);
 // Incremenet and decrement operations
 // Shift operations
 // Jump and call operations
+void test_jmp_abs(void);
+void test_jmp_ind(void);
+void test_jsr_abs(void);
+void test_rts_imp(void);
+
 // Status flag change operations
 // System function operations
 
@@ -112,3 +117,9 @@ void test_plp_imp(void);
 	{"php_imp", test_php_imp},		\
 	{"pla_imp", test_pla_imp},		\
 	{"plp_imp", test_plp_imp}
+
+#define test_jump_and_call_operations \
+	{"jmp_abs", test_jmp_abs},		\
+	{"jmp_ind", test_jmp_ind},		\
+	{"jsr_abs", test_jsr_abs},		\
+	{"rts_imp", test_rts_imp}

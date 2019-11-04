@@ -146,6 +146,16 @@ uint8_t aby(cpu6502_t* cpu)
 
 uint8_t ind(cpu6502_t* cpu)
 {
+	uint8_t low_byte_address = cpu6502_read_data(cpu, cpu->program_counter++);
+	uint8_t high_byte_address = cpu6502_read_data(cpu, cpu->program_counter++);
+
+	uint16_t indirect_address = bytes_to_word(high_byte_address, low_byte_address);
+
+	uint8_t lo = cpu6502_read_data(cpu, indirect_address++);
+	uint8_t hi = cpu6502_read_data(cpu, indirect_address);
+
+	absolute_address = bytes_to_word(hi, lo);
+
 	return 0;
 }
 
@@ -315,11 +325,15 @@ uint8_t iny(cpu6502_t* cpu)
 
 uint8_t jmp(cpu6502_t* cpu)
 {
+	cpu->program_counter = absolute_address;
 	return 0;
 }
 
 uint8_t jsr(cpu6502_t* cpu)
 {
+	cpu6502_push_stack(cpu, low_byte(cpu->program_counter));
+	cpu6502_push_stack(cpu, high_byte(cpu->program_counter));
+	cpu->program_counter = absolute_address;
 	return 0;
 }
 
@@ -404,6 +418,10 @@ uint8_t rti(cpu6502_t* cpu)
 
 uint8_t rts(cpu6502_t* cpu)
 {
+	uint8_t hi = cpu6502_pop_stack(cpu);
+	uint8_t lo = cpu6502_pop_stack(cpu);
+
+	cpu->program_counter = bytes_to_word(hi, lo);
 	return 0;
 }
 
