@@ -106,7 +106,7 @@ uint8_t abs(cpu6502_t* cpu)
 {
 	uint8_t lo = cpu6502_read_data(cpu, cpu->program_counter++);
 	uint8_t hi = cpu6502_read_data(cpu, cpu->program_counter++);
-	absolute_address = (uint16_t)hi << 8 | lo;
+	absolute_address = bytes_to_word(hi, lo);
 	M = cpu6502_read_data(cpu, absolute_address);
 
 	return 0;
@@ -117,7 +117,7 @@ uint8_t abx(cpu6502_t* cpu)
 	uint16_t lo = cpu6502_read_data(cpu, cpu->program_counter++);
 	uint16_t hi = cpu6502_read_data(cpu, cpu->program_counter++);
 	
-	absolute_address = (hi << 8) | lo;
+	absolute_address = bytes_to_word(hi, lo);
 	absolute_address += cpu->x_register;
 
 	M = cpu6502_read_data(cpu, absolute_address);
@@ -164,7 +164,7 @@ uint8_t izx(cpu6502_t* cpu)
 	uint16_t zero_page_offset = cpu6502_read_data(cpu, cpu->program_counter++);
 	uint16_t low_byte_address = cpu6502_read_data(cpu, (zero_page_offset + cpu->x_register) & 0x00FF);
 	uint16_t high_byte_address = cpu6502_read_data(cpu, (zero_page_offset + cpu->x_register + 1) & 0x00FF);
-	absolute_address = (high_byte_address << 8) | low_byte_address;
+	absolute_address = bytes_to_word(high_byte_address, low_byte_address);
 
 	M = cpu6502_read_data(cpu, absolute_address);
 
@@ -177,7 +177,7 @@ uint8_t izy(cpu6502_t* cpu)
 	uint16_t low_byte_address = cpu6502_read_data(cpu, zero_page_offset & 0x00FF);
 	uint16_t high_byte_address = cpu6502_read_data(cpu, (zero_page_offset + 1) & 0x00FF);
 
-	absolute_address = (high_byte_address << 8) | low_byte_address;
+	absolute_address = bytes_to_word(high_byte_address, low_byte_address);
 	absolute_address += cpu->y_register;
 
 	M = cpu6502_read_data(cpu, absolute_address);
