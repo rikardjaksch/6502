@@ -59,6 +59,7 @@ void test_plp_imp(void);
 // Arithmetic operations
 // Incremenet and decrement operations
 // Shift operations
+
 // Jump and call operations
 void test_jmp_abs(void);
 void test_jmp_ind(void);
@@ -66,6 +67,14 @@ void test_jsr_abs(void);
 void test_rts_imp(void);
 
 // Status flag change operations
+void test_clc_imp(void);
+void test_cld_imp(void);
+void test_cli_imp(void);
+void test_clv_imp(void);
+void test_sec_imp(void);
+void test_sed_imp(void);
+void test_sei_imp(void);
+
 // System function operations
 
 #define test_interrupts							\
@@ -123,3 +132,12 @@ void test_rts_imp(void);
 	{"jmp_ind", test_jmp_ind},		\
 	{"jsr_abs", test_jsr_abs},		\
 	{"rts_imp", test_rts_imp}
+
+#define test_status_flag_operations \
+	{"clc_imp", test_clc_imp},		\
+	{"cld_imp", test_cld_imp},		\
+	{"cli_imp", test_cli_imp},		\
+	{"clv_imp", test_clv_imp},		\
+	{"sec_imp", test_sec_imp},		\
+	{"sed_imp", test_sed_imp},		\
+	{"sei_imp", test_sei_imp}

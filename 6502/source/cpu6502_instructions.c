@@ -255,21 +255,25 @@ uint8_t bvs(cpu6502_t* cpu)
 
 uint8_t clc(cpu6502_t* cpu)
 {
+	cpu6502_set_status_bit(cpu, CPU_STATUS_CARRY, false);
 	return 0;
 }
 
 uint8_t cld(cpu6502_t* cpu)
 {
+	cpu6502_set_status_bit(cpu, CPU_STATUS_DECIMAL_MODE, false);
 	return 0;
 }
 
 uint8_t cli(cpu6502_t* cpu)
 {
+	cpu6502_set_status_bit(cpu, CPU_STATUS_IRQ_DISABLE, false);
 	return 0;
 }
 
 uint8_t clv(cpu6502_t* cpu)
 {
+	cpu6502_set_status_bit(cpu, CPU_STATUS_OVERFLOW, false);
 	return 0;
 }
 
@@ -432,16 +436,19 @@ uint8_t sbc(cpu6502_t* cpu)
 
 uint8_t sec(cpu6502_t* cpu)
 {
+	cpu6502_set_status_bit(cpu, CPU_STATUS_CARRY, true);
 	return 0;
 }
 
 uint8_t sed(cpu6502_t* cpu)
 {
+	cpu6502_set_status_bit(cpu, CPU_STATUS_DECIMAL_MODE, true);
 	return 0;
 }
 
 uint8_t sei(cpu6502_t* cpu)
 {
+	cpu6502_set_status_bit(cpu, CPU_STATUS_IRQ_DISABLE, true);
 	return 0;
 }
 
