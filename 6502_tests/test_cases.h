@@ -56,6 +56,33 @@ void test_pla_imp(void);
 void test_plp_imp(void);
 
 // Logical operations
+void test_and_imm(void);
+void test_and_zpg(void);
+void test_and_zpx(void);
+void test_and_abs(void);
+void test_and_abx(void);
+void test_and_aby(void);
+void test_and_inx(void);
+void test_and_iny(void);
+void test_eor_imm(void);
+void test_eor_zpg(void);
+void test_eor_zpx(void);
+void test_eor_abs(void);
+void test_eor_abx(void);
+void test_eor_aby(void);
+void test_eor_inx(void);
+void test_eor_iny(void);
+void test_ora_imm(void);
+void test_ora_zpg(void);
+void test_ora_zpx(void);
+void test_ora_abs(void);
+void test_ora_abx(void);
+void test_ora_aby(void);
+void test_ora_inx(void);
+void test_ora_iny(void);
+void test_bit_zpg(void);
+void test_bit_abs(void);
+
 // Arithmetic operations
 // Incremenet and decrement operations
 // Shift operations
@@ -127,11 +154,41 @@ void test_sei_imp(void);
 	{"pla_imp", test_pla_imp},		\
 	{"plp_imp", test_plp_imp}
 
+#define test_logical_operations \
+	{"and_imm", test_and_imm},		\
+	{"and_zpg", test_and_zpg},		\
+	{"and_zpx", test_and_zpx},		\
+	{"and_abs", test_and_abs},		\
+	{"and_abx", test_and_abx},		\
+	{"and_aby", test_and_aby},		\
+	{"and_inx", test_and_inx},		\
+	{"and_iny", test_and_iny},		\
+	{"eor_imm", test_eor_imm},		\
+	{"eor_zpg", test_eor_zpg},		\
+	{"eor_zpx", test_eor_zpx},		\
+	{"eor_abs", test_eor_abs},		\
+	{"eor_abx", test_eor_abx},		\
+	{"eor_aby", test_eor_aby},		\
+	{"eor_inx", test_eor_inx},		\
+	{"eor_iny", test_eor_iny},		\
+	{"ora_imm", test_ora_imm},		\
+	{"ora_zpg", test_ora_zpg},		\
+	{"ora_zpx", test_ora_zpx},		\
+	{"ora_abs", test_ora_abs},		\
+	{"ora_abx", test_ora_abx},		\
+	{"ora_aby", test_ora_aby},		\
+	{"ora_inx", test_ora_inx},		\
+	{"ora_iny", test_ora_iny},		\
+	{"bit_zpg", test_bit_zpg},		\
+	{"bit_abs", test_bit_abs}
+
 #define test_jump_and_call_operations \
 	{"jmp_abs", test_jmp_abs},		\
 	{"jmp_ind", test_jmp_ind},		\
 	{"jsr_abs", test_jsr_abs},		\
 	{"rts_imp", test_rts_imp}
+
+
 
 #define test_status_flag_operations \
 	{"clc_imp", test_clc_imp},		\

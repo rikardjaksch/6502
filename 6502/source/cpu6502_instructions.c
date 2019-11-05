@@ -195,7 +195,11 @@ uint8_t adc(cpu6502_t* cpu)
 
 uint8_t and(cpu6502_t* cpu)
 {
-	return 0;
+	// A,Z,N = A & M
+	cpu->accumulator = cpu->accumulator & M;
+	cpu6502_set_status_bit(cpu, CPU_STATUS_ZERO, cpu->accumulator == 0x00);
+	cpu6502_set_status_bit(cpu, CPU_STATUS_NEGATIVE, cpu->accumulator & 0x80);
+	return 1;
 }
 
 uint8_t asl(cpu6502_t* cpu)
