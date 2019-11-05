@@ -106,12 +106,12 @@ void test_sei_imp(void);
 	{"sta_aby", test_sta_aby},		\
 	{"sta_inx", test_sta_inx},		\
 	{"sta_iny", test_sta_iny},		\
-	{"stx_zpg", test_sta_iny},		\
-	{"stx_zpy", test_sta_iny},		\
-	{"stx_abs", test_sta_iny},		\
-	{"sty_zpg", test_sta_iny},		\
-	{"sty_zpx", test_sta_iny},		\
-	{"sty_abs", test_sta_iny}
+	{"stx_zpg", test_stx_zpg},		\
+	{"stx_zpy", test_stx_zpy},		\
+	{"stx_abs", test_stx_abs},		\
+	{"sty_zpg", test_sty_zpg},		\
+	{"sty_zpx", test_sty_zpx},		\
+	{"sty_abs", test_sty_abs}
 
 #define test_register_transfer_operations \
 	{"tax_imp", test_tax_imp},		\

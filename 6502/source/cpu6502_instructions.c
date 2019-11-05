@@ -92,8 +92,8 @@ uint8_t zpx(cpu6502_t* cpu)
 uint8_t zpy(cpu6502_t* cpu)
 {
 	uint8_t zero_page_offset = cpu6502_read_data(cpu, cpu->program_counter++);
-	absolute_address = (uint16_t)zero_page_offset + (uint16_t)cpu->y_register;
-	M = cpu6502_read_data(cpu, absolute_address & 0x00FF);
+	absolute_address = (zero_page_offset + cpu->y_register) & 0x00FF;
+	M = cpu6502_read_data(cpu, absolute_address);
 	return 0;
 }
 
@@ -460,11 +460,13 @@ uint8_t sta(cpu6502_t* cpu)
 
 uint8_t stx(cpu6502_t* cpu)
 {
+	cpu6502_write_data(cpu, absolute_address, cpu->x_register);
 	return 0;
 }
 
 uint8_t sty(cpu6502_t* cpu)
 {
+	cpu6502_write_data(cpu, absolute_address, cpu->y_register);
 	return 0;
 }
 
