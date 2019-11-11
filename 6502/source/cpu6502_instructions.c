@@ -224,6 +224,10 @@ uint8_t beq(cpu6502_t* cpu)
 
 uint8_t bit(cpu6502_t* cpu)
 {
+	// A & M, N = M7, V = M6
+	uint8_t temp = cpu->accumulator & M;
+	cpu6502_set_status_bit(cpu, CPU_STATUS_OVERFLOW, (temp & (1 << 6)) == (1 << 6));
+	cpu6502_set_status_bit(cpu, CPU_STATUS_NEGATIVE, (temp & (1 << 7)) == (1 << 7));
 	return 0;
 }
 
@@ -313,7 +317,11 @@ uint8_t dey(cpu6502_t* cpu)
 
 uint8_t eor(cpu6502_t* cpu)
 {
-	return 0;
+	// A,Z,N = A ^ M
+	cpu->accumulator = cpu->accumulator ^ M;
+	cpu6502_set_status_bit(cpu, CPU_STATUS_ZERO, cpu->accumulator == 0x00);
+	cpu6502_set_status_bit(cpu, CPU_STATUS_NEGATIVE, cpu->accumulator & 0x80);
+	return 1;
 }
 
 uint8_t inc(cpu6502_t* cpu)
@@ -385,7 +393,11 @@ uint8_t nop(cpu6502_t* cpu)
 
 uint8_t ora(cpu6502_t* cpu)
 {
-	return 0;
+	// A,Z,N = A | M
+	cpu->accumulator = cpu->accumulator | M;
+	cpu6502_set_status_bit(cpu, CPU_STATUS_ZERO, cpu->accumulator == 0x00);
+	cpu6502_set_status_bit(cpu, CPU_STATUS_NEGATIVE, cpu->accumulator & 0x80);
+	return 1;
 }
 
 uint8_t pha(cpu6502_t* cpu)
@@ -458,18 +470,21 @@ uint8_t sei(cpu6502_t* cpu)
 
 uint8_t sta(cpu6502_t* cpu)
 {
+	// M = A
 	cpu6502_write_data(cpu, absolute_address, cpu->accumulator);
 	return 0;
 }
 
 uint8_t stx(cpu6502_t* cpu)
 {
+	// M = X
 	cpu6502_write_data(cpu, absolute_address, cpu->x_register);
 	return 0;
 }
 
 uint8_t sty(cpu6502_t* cpu)
 {
+	// M = Y
 	cpu6502_write_data(cpu, absolute_address, cpu->y_register);
 	return 0;
 }

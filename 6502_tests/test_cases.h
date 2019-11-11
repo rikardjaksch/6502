@@ -1,6 +1,6 @@
 #pragma once
 
-// Interuppt operations
+// Interupt operations
 void test_reset_interrupt(void);
 
 // Load and store operations
@@ -92,6 +92,8 @@ void test_jmp_abs(void);
 void test_jmp_ind(void);
 void test_jsr_abs(void);
 void test_rts_imp(void);
+
+// Branch operations
 
 // Status flag change operations
 void test_clc_imp(void);
