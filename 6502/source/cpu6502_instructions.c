@@ -99,7 +99,15 @@ uint8_t zpy(cpu6502_t* cpu)
 
 uint8_t rel(cpu6502_t* cpu)
 {
-	return 0;
+	relative_address = cpu6502_read_data(cpu, cpu->program_counter++);
+
+	if (relative_address & 0x80)
+		relative_address |= 0xFF00;
+	
+	// We return three here an let the branch instructions
+	// handle the logic of either returning 0, 1 or 2 depending
+	// on how the branch behaves
+	return 3;
 }
 
 uint8_t abs(cpu6502_t* cpu)
@@ -209,16 +217,55 @@ uint8_t asl(cpu6502_t* cpu)
 
 uint8_t bcc(cpu6502_t* cpu)
 {
+	if ((cpu->status_register & CPU_STATUS_CARRY) == 0)
+	{
+		uint8_t cycles = 1;
+		absolute_address = cpu->program_counter + relative_address;
+		
+		if ((absolute_address & 0xFF00) != (cpu->program_counter & 0xFF00))
+			cycles++;
+
+		cpu->program_counter = absolute_address;
+
+		return cycles;
+	}
+
 	return 0;
 }
 
 uint8_t bcs(cpu6502_t* cpu)
 {
+	if (cpu->status_register & CPU_STATUS_CARRY)
+	{
+		uint8_t cycles = 1;
+		absolute_address = cpu->program_counter + relative_address;
+
+		if ((absolute_address & 0xFF00) != (cpu->program_counter & 0xFF00))
+			cycles++;
+
+		cpu->program_counter = absolute_address;
+
+		return cycles;
+	}
+
 	return 0;
 }
 
 uint8_t beq(cpu6502_t* cpu)
 {
+	if (cpu->status_register & CPU_STATUS_ZERO)
+	{
+		uint8_t cycles = 1;
+		absolute_address = cpu->program_counter + relative_address;
+
+		if ((absolute_address & 0xFF00) != (cpu->program_counter & 0xFF00))
+			cycles++;
+
+		cpu->program_counter = absolute_address;
+
+		return cycles;
+	}
+
 	return 0;
 }
 
@@ -233,16 +280,55 @@ uint8_t bit(cpu6502_t* cpu)
 
 uint8_t bmi(cpu6502_t* cpu)
 {
+	if (cpu->status_register & CPU_STATUS_NEGATIVE)
+	{
+		uint8_t cycles = 1;
+		absolute_address = cpu->program_counter + relative_address;
+
+		if ((absolute_address & 0xFF00) != (cpu->program_counter & 0xFF00))
+			cycles++;
+
+		cpu->program_counter = absolute_address;
+
+		return cycles;
+	}
+
 	return 0;
 }
 
 uint8_t bne(cpu6502_t* cpu)
 {
+	if ((cpu->status_register & CPU_STATUS_ZERO) == 0)
+	{
+		uint8_t cycles = 1;
+		absolute_address = cpu->program_counter + relative_address;
+
+		if ((absolute_address & 0xFF00) != (cpu->program_counter & 0xFF00))
+			cycles++;
+
+		cpu->program_counter = absolute_address;
+
+		return cycles;
+	}
+
 	return 0;
 }
 
 uint8_t bpl(cpu6502_t* cpu)
 {
+	if (cpu->status_register & CPU_STATUS_NEGATIVE)
+	{
+		uint8_t cycles = 1;
+		absolute_address = cpu->program_counter + relative_address;
+
+		if ((absolute_address & 0xFF00) != (cpu->program_counter & 0xFF00))
+			cycles++;
+
+		cpu->program_counter = absolute_address;
+
+		return cycles;
+	}
+
 	return 0;
 }
 
@@ -253,11 +339,37 @@ uint8_t brk(cpu6502_t* cpu)
 
 uint8_t bvc(cpu6502_t* cpu)
 {
+	if ((cpu->status_register & CPU_STATUS_OVERFLOW) == 0)
+	{
+		uint8_t cycles = 1;
+		absolute_address = cpu->program_counter + relative_address;
+
+		if ((absolute_address & 0xFF00) != (cpu->program_counter & 0xFF00))
+			cycles++;
+
+		cpu->program_counter = absolute_address;
+
+		return cycles;
+	}
+
 	return 0;
 }
 
 uint8_t bvs(cpu6502_t* cpu)
 {
+	if (cpu->status_register & CPU_STATUS_OVERFLOW)
+	{
+		uint8_t cycles = 1;
+		absolute_address = cpu->program_counter + relative_address;
+
+		if ((absolute_address & 0xFF00) != (cpu->program_counter & 0xFF00))
+			cycles++;
+
+		cpu->program_counter = absolute_address;
+
+		return cycles;
+	}
+
 	return 0;
 }
 

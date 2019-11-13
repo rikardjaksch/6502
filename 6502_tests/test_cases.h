@@ -94,6 +94,14 @@ void test_jsr_abs(void);
 void test_rts_imp(void);
 
 // Branch operations
+void test_bcc_rel(void);
+void test_bcs_rel(void);
+void test_beq_rel(void);
+void test_bmi_rel(void);
+void test_bne_rel(void);
+void test_bpl_rel(void);
+void test_bvc_rel(void);
+void test_bvs_rel(void);
 
 // Status flag change operations
 void test_clc_imp(void);
@@ -190,7 +198,15 @@ void test_sei_imp(void);
 	{"jsr_abs", test_jsr_abs},		\
 	{"rts_imp", test_rts_imp}
 
-
+#define test_branch_operations	\
+	{"bcc_rel", test_bcc_rel},	\
+	{"bcs_rel", test_bcs_rel},	\
+	{"beq_rel", test_beq_rel},	\
+	{"bmi_rel", test_bmi_rel},	\
+	{"bne_rel", test_bne_rel},	\
+	{"bpl_rel", test_bpl_rel},	\
+	{"bvc_rel", test_bvc_rel},	\
+	{"bvs_rel", test_bvs_rel}
 
 #define test_status_flag_operations \
 	{"clc_imp", test_clc_imp},		\
